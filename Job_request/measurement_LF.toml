@@ -1,0 +1,21 @@
+[hardware]
+  model = "ZNB"
+  address = 'TCPIP0::192.168.1.215::inst0::INSTR'
+  attenuation = 80
+  port = "S21"
+
+[sample]
+  name = "QuantWareV14W23A3"
+
+
+[[measurement]]
+  label = "TWPA"
+  output = "/home/ratiswu/liteVNA_test/QuantWareW23A5_pumpoff_new"
+
+  IF_bandwidth = 1000
+  power = -40
+  repeat = 1
+  [measurement.frequency]
+    start = 3e9
+    stop = 9e9
+    points = 5001

@@ -1,0 +1,33 @@
+[hardware]
+  [hardware.VNA]
+    model = "ZNB"
+    address = 'TCPIP0::192.168.1.215::inst0::INSTR'
+    attenuation = 80
+    port = "S21"
+  [hardware.SG]
+    model = "SGS100A"
+    address = 'TCPIP0::192.168.1.14::inst0::INSTR'
+
+[sample]
+  name = "QuantWareV14W23A3"
+
+
+[[measurement]]
+  label = "TWPA"
+  output = "/home/ratiswu/liteVNA_test/TWPA_TuneUP_W23A5"
+
+  IF_bandwidth = 1000
+  power = -40
+  repeat = 1
+  [measurement.frequency]
+    start = 5e9
+    stop = 6.5e9
+    points = 5
+  [pumping.frequency]
+    start = 6.85e9
+    stop = 7.35e9
+    points = 100
+  [pumping.power]
+    start = -15
+    stop = -30
+    points = 30
