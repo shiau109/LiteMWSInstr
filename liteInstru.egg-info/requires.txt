@@ -3,3 +3,5 @@ matplotlib
 pyvisa
 qcodes
 scipy
+xarray
+tomlkit

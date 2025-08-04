@@ -12,6 +12,8 @@ Requires-Dist: matplotlib
 Requires-Dist: pyvisa
 Requires-Dist: qcodes
 Requires-Dist: scipy
+Requires-Dist: xarray
+Requires-Dist: tomlkit
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
