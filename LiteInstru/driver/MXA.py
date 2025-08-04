@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 from qcodes.instrument.visa import VisaInstrument
 from numpy import ndarray, linspace
+import time
+
 class MXA(VisaInstrument):
 
     def __init__(self, name, address, **kwargs):
         super().__init__(name, address, **kwargs)
         self.marker = None
+        self.__ask_time = 0
         self.write_termination = '\n'
         self.read_termination = '\n'
     
@@ -26,13 +29,48 @@ class MXA(VisaInstrument):
         self.write(f":CALC:MARK1:X {freq_hz}")
         self.marker = freq_hz
 
+    def set_timeout(self):
+        sweep_time = float(self.ask(":SWE:TIME?"))
+        self.__ask_time = sweep_time/10
+        print(f"total sweep time: {round(sweep_time,1)} secs.")
+        self.visa_handle.timeout = int((sweep_time + 10) * 1000)
+
     def set_reference_level(self, ref_level_dbm):
         self.write(f":DISP:WIND:TRAC:Y:RLEV {ref_level_dbm}")
 
-    def single_sweep(self):
+    def single_sweep(self) -> list:
+        self.set_timeout()
         self.write(":INIT:CONT OFF")
         self.write(":INIT")
-        self.write("*WAI")
+
+        # Wait for sweep to complete with progress printing
+        print("Sweep started...")
+        start_time = time.time()
+        max_wait = self.visa_handle.timeout / 1000  # Convert ms to seconds
+        poll_interval = self.__ask_time  # seconds between checks
+        n = 0 
+
+        while True:
+            try:
+                status = int(self.ask(":STAT:OPER:COND?"))
+            except Exception as e:
+                print(f"Status read failed: {e}")
+                raise
+
+            elapsed = time.time() - start_time
+            print(f"{n} % Completed \r", end='',flush=True)
+            n+=10
+
+            if status==0:  # Bit 0 = 1 → operation complete
+                print("Sweep complete.")
+                break
+
+            if elapsed > max_wait:
+                raise TimeoutError(f"Sweep did not complete within {max_wait:.1f} s")
+
+            time.sleep(poll_interval)
+
+        return self.trace_data()
 
     def peak_search(self):
         self.write(":CALC:MARK:MAX")
