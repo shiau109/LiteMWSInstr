@@ -1,5 +1,4 @@
-import os, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+import os
 from numpy import array, abs, log10
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes

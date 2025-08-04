@@ -1,0 +1,20 @@
+Metadata-Version: 2.4
+Name: liteInstru
+Version: 0.1.0
+Summary: Extensions for LiteVNA
+Home-page: https://github.com/shiau109/LiteVNA
+Author: shiau109, RatisWu
+Author-email: porkface0301@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: pyvisa
+Requires-Dist: qcodes
+Requires-Dist: scipy
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary

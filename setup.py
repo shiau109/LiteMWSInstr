@@ -4,7 +4,7 @@ setup(
     name='liteInstru',
     version='0.1.0',
     packages=find_packages(),
-    install_requires=['numpy','matplotlib','pyvisa','qcodes','scipy'],
+    install_requires=['numpy','matplotlib','pyvisa','qcodes','scipy','xarray','tomlkit'],
     author='shiau109, RatisWu',
     author_email='porkface0301@gmail.com',
     description='Extensions for LiteVNA',

@@ -1,5 +1,4 @@
-import os, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
