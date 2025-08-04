@@ -1,9 +1,9 @@
+""" White looking with the brand 'Angilent Technologies' """
 from LiteInstru.driver.MXA import MXA
-import pyvisa
 
-class N9080A(MXA):
+class N9020A(MXA):
     def __init__(self, address:str):
-        super().__init__(name="Keysight_SAA",address=address)
+        super().__init__(name="Angilent_SA",address=address)
         
     
     def span_freq_sweep(self, center_freq:float|int, span_freq:float|int, res_bandwidth:float|int, sweep_pts:int|str="auto", repeat:int=1)->dict:
@@ -12,10 +12,10 @@ class N9080A(MXA):
             self.set_center_frequency(center_freq)
             self.set_rbw(res_bandwidth)
             self.set_span(span_freq)
-            if str(sweep_pts).lower() == 'auto':
-                self.auto_set_sweep_points()
-            else:
+            if isinstance(sweep_pts,int):
                 self.set_sweep_pts(sweep_pts)
+            else:
+                self.auto_set_sweep_points()
 
             for re in range(repeat):
                 print(f"Starting to sweep {re+1}/{repeat}")
@@ -25,12 +25,10 @@ class N9080A(MXA):
             freqs = self.get_freq_samples()
         except Exception as e:
             freqs = []
-            print("An error was caught like the following: ")
+            self.shut_down()
+            print("An error was caught as the following: ")
             import traceback
             traceback.print_exc()
-
-        self.shut_down()
-
 
         return {"freq":freqs, "data":repeat_data}
     
@@ -39,10 +37,11 @@ class N9080A(MXA):
 if __name__ == "__main__":
     ip = "192.168.1.21"
     address = f'TCPIP0::{ip}::inst0::INSTR'
-    SA = N9080A(address)
-    x, y = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
+    SA = N9020A(address)
+    data = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
+    SA.shut_down()
     import matplotlib.pyplot as plt
     import matplotlib
     matplotlib.use('TkAgg')
-    plt.plot(x, y[0])
+    plt.plot(data['freq'], data['data'][0])
     plt.show()
