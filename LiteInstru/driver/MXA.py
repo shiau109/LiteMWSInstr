@@ -14,7 +14,8 @@ class MXA(VisaInstrument):
     
     def set_center_frequency(self, freq_hz):
         self.write(f":FREQ:CENT {freq_hz}")
-
+    
+    
     def set_span(self, span_hz):
         self.write(f":FREQ:SPAN {span_hz}")
     
@@ -24,6 +25,10 @@ class MXA(VisaInstrument):
     def set_rbw(self, rbw_hz):
         self.write(f":BAND {rbw_hz}")
     
+    def auto_set_sweep_points(self):
+        points = int(float(self.ask(":FREQ:SPAN")) / float(self.ask(":BAND?"))) + 1
+        self.set_sweep_pts(points)
+
     def set_marker(self, freq_hz):
         self.write(":CALC:MARK1:MODE POS")
         self.write(f":CALC:MARK1:X {freq_hz}")
@@ -102,5 +107,6 @@ class MXA(VisaInstrument):
     @abstractmethod
     def span_freq_sweep(self, center_freq:float, span_freq:float, **kwargs):
         pass
-    
+
+
 
