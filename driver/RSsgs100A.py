@@ -5,6 +5,9 @@ class sgs100A(SG):
 
     def __init__( self, address:str ):
         self.__sgs = RohdeSchwarzSGS100A('sgs', address=address)
+
+    def set_clock_ref( self, clock:str='int'):
+        pass
     
     
     def CW_output( self, frequency_Hz:float=6e9, power_dBm:float=-20):
