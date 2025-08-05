@@ -41,8 +41,6 @@ class Datar():
         if self.__format == "nc":
             if len(list(self.coordinates)) == 0:
                 issues.append("Coordinates")
-            if len(list(self.attributes)) == 0:
-                issues.append("Attributes")
         elif self.__format == 'csv':
             if len(list(array(self.data).shape)) != 2:
                 issues.append("Data dimension for csv")
