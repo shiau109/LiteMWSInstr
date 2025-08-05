@@ -30,16 +30,27 @@ class N9020A(MXA):
             import traceback
             traceback.print_exc()
 
-        return {"freq":freqs, "data":repeat_data}
+        return {"freq":freqs, "data":repeat_data, "repeat":repeat}
     
 
 
 if __name__ == "__main__":
+    from LiteInstru.DataContainer.DataCenter import Datar
+    from numpy import array, arange
     ip = "192.168.1.21"
     address = f'TCPIP0::{ip}::inst0::INSTR'
     SA = N9020A(address)
     data = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
     SA.shut_down()
+    Dr = Datar()
+    Dr.data = data["data"]
+    Dr.file_name = "test"
+    Dr.file_folder = "."
+    Dr.coordinates = {"frequency":array(data["freq"]), "repeat":arange(data["repeat"])}
+    Dr.attributes = {"note":"This is a dataset only for test."}
+    file_loc = Dr.save()
+    print(file_loc)
+
     import matplotlib.pyplot as plt
     import matplotlib
     matplotlib.use('TkAgg')

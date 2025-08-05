@@ -15,6 +15,6 @@ class sgs100A(SG):
         self.__sgs.power(power_dBm)
         self.__sgs.on()
     
-    
     def CW_shutdown( self ):
         self.__sgs.off()
+        self.__sgs.close()
