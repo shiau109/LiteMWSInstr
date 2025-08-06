@@ -1,7 +1,7 @@
-""" White looking with the brand 'Angilent Technologies' """
+""" Black looking with the brand 'Keysight' """
 from LiteInstru.driver.MXA import MXA
 
-class N9020A(MXA):
+class N9020B(MXA):
     def __init__(self, address:str):
         super().__init__(name="Angilent_SA",address=address)
         
@@ -37,10 +37,10 @@ class N9020A(MXA):
 if __name__ == "__main__":
     from LiteInstru.DataContainer.DataCenter import Datar
     from numpy import array, arange
-    ip = "192.168.1.21"
+    ip = "192.168.1.20"
     address = f'TCPIP0::{ip}::inst0::INSTR'
     
-    SA = N9020A(address)
+    SA = N9020B(address)
     data = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
     SA.shut_down()
     Dr = Datar()
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     Dr.file_name = "test"
     Dr.file_folder = "."
     Dr.coordinates = {"repeat":arange(data["repeat"]),"frequency":array(data["freq"])}
-    Dr.attributes = {"model":"N9020A","IP":"192.168.1.21"}
+    Dr.attributes = {"model":"N9020B","IP":"192.168.1.20"}
     file_loc = Dr.save()
 
     import matplotlib.pyplot as plt

@@ -4,7 +4,7 @@ LiteInstru/__init__.py
 LiteInstru/driver/E5080B.py
 LiteInstru/driver/MXA.py
 LiteInstru/driver/RSsgs100A.py
-LiteInstru/driver/SA_N9080A.py
+LiteInstru/driver/SA_N9020A.py
 LiteInstru/driver/SG.py
 LiteInstru/driver/VNA.py
 LiteInstru/driver/ZNB.py

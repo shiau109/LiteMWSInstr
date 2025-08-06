@@ -26,7 +26,10 @@ class MXA(VisaInstrument):
         self.write(f":BAND {rbw_hz}")
     
     def auto_set_sweep_points(self):
-        points = int(float(self.ask(":FREQ:SPAN")) / float(self.ask(":BAND?"))) + 1
+        points = int(float(self.ask(":FREQ:SPAN?")) / float(self.ask(":BAND?"))) + 1
+        if points > 100000:
+            points = 100000
+        print(f"Automatically set the sweep point = {points}")
         self.set_sweep_pts(points)
 
     def set_marker(self, freq_hz):
