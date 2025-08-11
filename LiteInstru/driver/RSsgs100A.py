@@ -17,4 +17,6 @@ class sgs100A(SG):
     
     def CW_shutdown( self ):
         self.__sgs.off()
+
+    def close_connection( self ):
         self.__sgs.close()

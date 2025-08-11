@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from qcodes.instrument.visa import VisaInstrument
 from numpy import ndarray, linspace
 import time
+from numpy import array, mean, log10, sqrt
 
 class MXA(VisaInstrument):
 
@@ -79,66 +80,6 @@ class MXA(VisaInstrument):
             time.sleep(poll_interval)
 
         return self.trace_data()
-    
-    def averaged_sweep(self, averages:int) -> list:
-        """
-        Perform a single averaged sweep.
-        
-        Parameters:
-            averages (int): Number of averages to take.
-        
-        Returns:
-            list: Averaged trace data.
-        """
-        self.set_timeout()
-
-        # 設定平均模式
-        self.write(":AVER:TYPE RMS")   # 或 "POW" / "VOLT"，視需求
-        self.write(":AVER:COUN {}".format(averages))
-        self.write(":AVER ON")
-
-        # 停止連續掃描，準備手動觸發
-        self.write(":INIT:CONT OFF")
-
-        # 開始掃描（平均模式下會自動重複 averages 次）
-        self.write(":INIT")
-
-        print(f"Averaged sweep started with {averages} averages...")
-        start_time = time.time()
-        max_wait = self.visa_handle.timeout / 1000  # ms → s
-        poll_interval = self.__ask_time  # polling 間隔
-        last_percent = -1
-
-        while True:
-            try:
-                # :STAT:OPER:COND? 的 bit mask 可判斷狀態
-                status = int(self.ask(":STAT:OPER:COND?"))
-            except Exception as e:
-                print(f"Status read failed: {e}")
-                raise
-
-            elapsed = time.time() - start_time
-            # 粗略進度顯示（這裡用 elapsed/max_wait 當假進度條）
-            percent = min(int((elapsed / max_wait) * 100), 100)
-            if percent != last_percent:
-                print(f"{percent}% Completed \r", end='', flush=True)
-                last_percent = percent
-
-            # 平均完成時，狀態會回到 0
-            if status == 0:
-                print("Averaged sweep complete.")
-                break
-
-            if elapsed > max_wait:
-                raise TimeoutError(f"Averaged sweep did not complete within {max_wait:.1f} s")
-
-            time.sleep(poll_interval)
-
-        # 關閉平均（可選）
-        self.write(":AVER OFF")
-
-        return self.trace_data()
-
 
     def peak_search(self):
         self.write(":CALC:MARK:MAX")
@@ -166,7 +107,23 @@ class MXA(VisaInstrument):
         print("SA closed. ")
         self.close()
 
-    
+    def mean_traces_in_dBm(self, traces_dBm, mode:str='rms'):
+        '''
+        Turn the trace from dBm unit to Watt, then average it by the mode. 
+        * mode = 'rms':root mean square. 'mean':mean
+        ---
+        * traces_dBm shape :(repeat, freqs)
+        '''
+        
+        traces_dBm = array(traces_dBm)  # shape = (N_traces, N_points)
+        traces_watt = 10 ** (traces_dBm / 10) * 1e-3  # 轉成 W
+        if mode.lower() == 'rms':
+            avg_watt = sqrt(mean(traces_watt**2, axis=0))
+        else:
+            avg_watt = mean(traces_watt, axis=0)
+        avg_dBm = 10 * log10(avg_watt * 1e3)
+        return avg_dBm
+        
     @abstractmethod
     def span_freq_sweep(self, center_freq:float, span_freq:float, **kwargs):
         pass

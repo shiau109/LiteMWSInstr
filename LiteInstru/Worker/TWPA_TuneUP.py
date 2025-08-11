@@ -1,4 +1,4 @@
-import os
+import os, json
 import numpy as np
 import xarray as xr
 from datetime import datetime
@@ -6,6 +6,7 @@ from os import makedirs
 from os.path import exists
 import tomlkit
 from LiteInstru.driver import get_SA, get_SG 
+from LiteInstru.DataContainer.DataCenter import Datar
 
 
 config_path = '/Users/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_tuneUp_request.toml'
@@ -21,11 +22,9 @@ SA_address, SA_model = config["Hardware"]["SA"]["address"], config["Hardware"]["
 ROSG_address, ROSG_model = config["Hardware"]["ROSG"]["address"], config["Hardware"]["ROSG"]["model"]
 PPSG_address, PPSG_model = config["Hardware"]["PPSG"]["address"], config["Hardware"]["PPSG"]["model"]
 
-SA = get_SA(SA_address, SA_model, name = "SA")
-PPSG = get_SG(PPSG_address, PPSG_model, name = "ppsg")
-ROSG = get_SG(ROSG_address, ROSG_model, name = "rosg")
-
-measurements = config["Readout"]
+SA = get_SA(f"TCPIP0::{SA_address}::inst0::INSTR", SA_model, name = "SA")
+PPSG = get_SG(f"TCPIP0::{PPSG_address}::inst0::INSTR", PPSG_model, name = "ppsg")
+ROSG = get_SG(f"TCPIP0::{ROSG_address}::inst0::INSTR", ROSG_model, name = "rosg")
 
 pumping_conds = config["Pumping"]
 pump_freqs = np.linspace(pumping_conds["frequency"]['start'],pumping_conds["frequency"]['stop'],pumping_conds["frequency"]['points'])
@@ -34,80 +33,77 @@ pump_power = np.linspace(pumping_conds["power"]['start'],pumping_conds["power"][
 for ro_location in config["Readout"]:
     ro_freq, ro_power = config["Readout"][ro_location]['RO_freq'], config["Readout"][ro_location]['power']
     raw_data_folder = os.path.join(config["Readout"][ro_location]['output'],config["Readout"][ro_location]['label'])
+    data_path = {}
+    
     if not exists(raw_data_folder):
         makedirs(raw_data_folder)
 
+    Dr = Datar()
+    Dr.file_folder = raw_data_folder
+    
     ### Gain ###
     ## pump off
     ROSG.CW_output(ro_freq, ro_power)
-    SA.set_rbw(config["Readout"][ro_location]['res_band'])
-    SA.span_freq_sweep(ro_freq, span_freq=config["Readout"][ro_location]['span_freq'])
-
-
-
+    data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
+    
+    Dr.data = data["data"]
+    Dr.file_name = "pump_off_POWER"
+    Dr.coordinates = {"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    data_path["power_pump_off"] = Dr.save()
+    Dr.close_dataset()
+    
+    ## pump on
+    every_freq_data = []
+    for pp_freq in pump_freqs:
+        every_power_data = []
+        for pp_power in pump_power:
+            PPSG.CW_output(pp_freq, pp_power)
+            data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
+            PPSG.CW_shutdown()
+            every_power_data.append(data['data'])
+        every_freq_data.append(every_power_data)
+    
+    Dr.data = every_freq_data
+    Dr.file_name = "pump_on_POWER"
+    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    data_path["power_pump_on"] = Dr.save()
+    Dr.close_dataset()
+    ROSG.CW_shutdown()
+    
     ### Noise ###
+    ## pump off
+    data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
+    
+    Dr.data = data["data"]
+    Dr.file_name = "pump_off_NOISE"
+    Dr.coordinates = {"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    data_path["noise_pump_off"] = Dr.save()
+    Dr.close_dataset()
 
+    ## pump on 
+    every_freq_data = []
+    for pp_freq in pump_freqs:
+        every_power_data = []
+        for pp_power in pump_power:
+            PPSG.CW_output(pp_freq, pp_power)
+            data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
+            PPSG.CW_shutdown()
+            every_power_data.append(data['data'])
+        every_freq_data.append(every_power_data)
+    
+    Dr.data = every_freq_data
+    Dr.file_name = "pump_on_NOISE"
+    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    data_path["noise_pump_on"] = Dr.save()
+    Dr.close_dataset()
 
+    with open(os.path.join(raw_data_folder,"data_descriptions.json"), 'w', encoding='utf-8') as f:
+        json.dump(data_path, f, ensure_ascii=False, indent=4)
 
-
-"""
-pump_freqs = np.linspace(int(pumpings["frequency"]["start"]),int(pumpings["frequency"]["stop"]), int(pumpings["frequency"]["points"]))
-pump_powers = np.linspace(int(pumpings["power"]["start"]),int(pumpings["power"]["stop"]), int(pumpings["power"]["points"]))
-
-every_freq_data = [] # shape = (pump_freq, pump_power, repeat, ro_freq)
-start_time = datetime.now()
-vna = get_VNA(vna_address,vna_model)
-vna.check_error()
-SG = sgs100A(sweepLF_config["hardware"]["SG"]["address"])
-for p_freq in pump_freqs:
-    every_power_data = [] # shape = (pump_power, repeat, ro_freq)
-    for p_power in pump_powers:
-        print(f"Pumping: {round(p_freq*1e-6,1)} MHz, {round(p_power)} dBm")
-        SG.CW_output(frequency_Hz=p_freq, power_dBm=p_power)
-        
-        every_raw_data = [] # shape (repeat, freq)
-        for m_task in measurements: # ASSUME ONLY ONE TASK
-
-            output_folder = m_task["output"]
-            label = m_task["label"]
-
-            freq_start = m_task["frequency"]["start"]
-            freq_stop = m_task["frequency"]["stop"]
-            sweep_point = m_task["frequency"]["points"]
-            vna_power = m_task["power"]
-
-            IF_bandwidth = m_task["frequency"]["points"]
-            repeat = m_task["repeat"]
-            IF_bandwidth = m_task["IF_bandwidth"]
-            for i in range(repeat):
-                print(f"measurement: {i}/{repeat}")
-                # Set start and stop frequencies
-                freq_array, s_params  = vna.lin_freq_sweep( freq_start, freq_stop, sweep_point, vna_port, power=vna_power, IF_bandwith=IF_bandwidth)
-                s_params:np.ndarray
-                every_raw_data.append(s_params.tolist())
-        SG.CW_shutdown()       
-                
-        every_power_data.append(every_raw_data) 
-    every_freq_data.append(every_power_data)  
-end_time = datetime.now()
-dataset = xr.Dataset(
-    {"s21": ( ["pump_freq","pump_power","repeat","RO_frequency"],np.array(every_freq_data))},
-    coords={ "pump_freq":pump_freqs, "pump_power":pump_powers, "repeat":np.arange(repeat), "RO_frequency": freq_array}
-)
-
-dataset.attrs["IF_bandwidth"] = IF_bandwidth
-dataset.attrs["power"] = vna_power
-dataset.attrs["attenuation"] = attenuation
-
-dataset.attrs["start_time"] = str(start_time.strftime("%Y%m%d_%H%M%S"))
-dataset.attrs["end_time"] = str(end_time.strftime("%Y%m%d_%H%M%S"))
-
-if not exists(output_folder):
-    makedirs(output_folder)
-    print(f"Create subfolder {output_folder} in result!")
-
-dataset.to_netcdf( f"{output_folder}\\{label}_{start_time.strftime('%Y%m%d_%H%M%S')}.nc",auto_complex=True)
-dataset.close()
-
-
-"""
+SA.shut_down()
+ROSG.close_connection()
+PPSG.close_connection()

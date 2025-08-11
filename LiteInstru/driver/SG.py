@@ -16,3 +16,7 @@ class SG():
     @abstractmethod
     def CW_shutdown( self ):
         pass
+    
+    @abstractmethod
+    def close_connection( self ):
+        pass

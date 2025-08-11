@@ -29,6 +29,9 @@ class Datar():
     def get_ds(self)->Union[Dataset, DataFrame]:
         return self.__dataset
     
+    def close_dataset(self):
+        self.__dataset.close()
+    
     def __check_everything_ready__(self):
         issues = []
         
