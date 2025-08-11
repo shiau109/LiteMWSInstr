@@ -3,8 +3,8 @@ from .SG import SG
 
 class sgs100A(SG):
 
-    def __init__( self, address:str ):
-        self.__sgs = RohdeSchwarzSGS100A('sgs', address=address)
+    def __init__( self, address:str , name:str="sgs"):
+        self.__sgs = RohdeSchwarzSGS100A(name, address=address)
 
     def set_clock_ref( self, clock:str='int'):
         pass

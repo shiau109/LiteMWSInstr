@@ -2,8 +2,8 @@
 from LiteInstru.driver.MXA import MXA
 
 class N9020B(MXA):
-    def __init__(self, address:str):
-        super().__init__(name="Angilent_SA",address=address)
+    def __init__(self, address:str, name:str="Keysight_SA"):
+        super().__init__(name,address=address)
         
     
     def span_freq_sweep(self, center_freq:float|int, span_freq:float|int, res_bandwidth:float|int, sweep_pts:int|str="auto", repeat:int=1)->dict:
@@ -32,6 +32,31 @@ class N9020B(MXA):
 
         return {"freq":freqs, "data":repeat_data, "repeat":repeat}
     
+    def span_freq_sweep_rms(self, center_freq:float|int, span_freq:float|int, res_bandwidth:float|int, sweep_pts:int|str="auto", repeat:int=1)->dict:
+        repeat_data = []
+        try:
+            self.set_center_frequency(center_freq)
+            self.set_rbw(res_bandwidth)
+            self.set_span(span_freq)
+            if isinstance(sweep_pts,int):
+                self.set_sweep_pts(sweep_pts)
+            else:
+                self.auto_set_sweep_points()
+
+            repeat_data.append(self.averaged_sweep(repeat))
+            freqs = self.get_freq_samples()
+
+        except Exception as e:
+            freqs = []
+            self.shut_down()
+            print("An error was caught as the following: ")
+            import traceback
+            traceback.print_exc()
+
+        return {"freq":freqs, "data":repeat_data, "repeat":repeat}
+    
+    
+    
 
 
 if __name__ == "__main__":
@@ -41,11 +66,11 @@ if __name__ == "__main__":
     address = f'TCPIP0::{ip}::inst0::INSTR'
     
     SA = N9020B(address)
-    data = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
+    data = SA.span_freq_sweep(center_freq=6e9,span_freq=0.5e9,res_bandwidth=1e6,repeat=10)
     SA.shut_down()
     Dr = Datar()
     Dr.data = data["data"]
-    Dr.file_name = "test"
+    Dr.file_name = "re_sweep_10"
     Dr.file_folder = "."
     Dr.coordinates = {"repeat":arange(data["repeat"]),"frequency":array(data["freq"])}
     Dr.attributes = {"model":"N9020B","IP":"192.168.1.20"}

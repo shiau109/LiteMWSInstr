@@ -6,6 +6,10 @@ class SG():
         pass
     
     @abstractmethod
+    def set_clock_ref( self, clock:str='int'):
+        pass
+
+    @abstractmethod
     def CW_output( self, frequency_Hz, power_dBm):
         pass
     

@@ -1,29 +1,56 @@
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import xarray as xr
 from datetime import datetime
 from os import makedirs
 from os.path import exists
 import tomlkit
-from driver import get_VNA
-from driver.RSsgs100A import sgs100A
+from LiteInstru.driver import get_SA, get_SG 
 
-config_path = '/home/ratiswu/Documents/GitHub/LiteVNA/Worker/TWPA_tuneUp_request.toml'
+
+config_path = '/Users/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_tuneUp_request.toml'
 
 # Assuming 'config.toml' is your file
 with open(config_path, 'r') as file:
     content = file.read()
-    sweepLF_config = tomlkit.parse(content)
+    config = tomlkit.parse(content)
 
-vna_address = sweepLF_config["hardware"]["VNA"]["address"]
-vna_model = sweepLF_config["hardware"]["VNA"]["model"]
-vna_port = sweepLF_config["hardware"]["VNA"]["port"]
+info = config["Job_info"]
 
-measurements = sweepLF_config["measurement"]
-pumpings = sweepLF_config["pumping"]
-attenuation = sweepLF_config["hardware"]["VNA"]["attenuation"]
+SA_address, SA_model = config["Hardware"]["SA"]["address"], config["Hardware"]["SA"]["model"]
+ROSG_address, ROSG_model = config["Hardware"]["ROSG"]["address"], config["Hardware"]["ROSG"]["model"]
+PPSG_address, PPSG_model = config["Hardware"]["PPSG"]["address"], config["Hardware"]["PPSG"]["model"]
 
+SA = get_SA(SA_address, SA_model, name = "SA")
+PPSG = get_SG(PPSG_address, PPSG_model, name = "ppsg")
+ROSG = get_SG(ROSG_address, ROSG_model, name = "rosg")
+
+measurements = config["Readout"]
+
+pumping_conds = config["Pumping"]
+pump_freqs = np.linspace(pumping_conds["frequency"]['start'],pumping_conds["frequency"]['stop'],pumping_conds["frequency"]['points'])
+pump_power = np.linspace(pumping_conds["power"]['start'],pumping_conds["power"]['stop'],pumping_conds["power"]['points'])
+
+for ro_location in config["Readout"]:
+    ro_freq, ro_power = config["Readout"][ro_location]['RO_freq'], config["Readout"][ro_location]['power']
+    raw_data_folder = os.path.join(config["Readout"][ro_location]['output'],config["Readout"][ro_location]['label'])
+    if not exists(raw_data_folder):
+        makedirs(raw_data_folder)
+
+    ### Gain ###
+    ## pump off
+    ROSG.CW_output(ro_freq, ro_power)
+    SA.set_rbw(config["Readout"][ro_location]['res_band'])
+    SA.span_freq_sweep(ro_freq, span_freq=config["Readout"][ro_location]['span_freq'])
+
+
+
+    ### Noise ###
+
+
+
+
+"""
 pump_freqs = np.linspace(int(pumpings["frequency"]["start"]),int(pumpings["frequency"]["stop"]), int(pumpings["frequency"]["points"]))
 pump_powers = np.linspace(int(pumpings["power"]["start"]),int(pumpings["power"]["stop"]), int(pumpings["power"]["points"]))
 
@@ -83,3 +110,4 @@ dataset.to_netcdf( f"{output_folder}\\{label}_{start_time.strftime('%Y%m%d_%H%M%
 dataset.close()
 
 
+"""
