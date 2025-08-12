@@ -49,7 +49,7 @@ for ro_location in config["Readout"]:
     Dr.data = data["data"]
     Dr.file_name = "pump_off_POWER"
     Dr.coordinates = {"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
-    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"RO_power":ro_power,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path["power_pump_off"] = Dr.save()
     Dr.close_dataset()
     
@@ -67,7 +67,7 @@ for ro_location in config["Readout"]:
     Dr.data = every_freq_data
     Dr.file_name = "pump_on_POWER"
     Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
-    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
+    Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"RO_power":ro_power,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path["power_pump_on"] = Dr.save()
     Dr.close_dataset()
     ROSG.CW_shutdown()

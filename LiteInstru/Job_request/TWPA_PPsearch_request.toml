@@ -1,0 +1,30 @@
+[hardware]
+  model = "ZNB"
+  address = 'TCPIP0::192.168.1.215::inst0::INSTR'
+  attenuation = 80
+  port = "S21"
+
+
+[[measurement]]
+  label = "SilentWave_A1702"
+  output = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702"
+
+  IF_bandwidth = 1000
+  power = -40
+  repeat = 1
+  [measurement.frequency]
+    start = 5.5e9
+    stop = 6.5e9
+    points = 5
+
+[[pumping]]
+  SG_model = "sgs100a"
+  address = 'TCPIP0::192.168.1.14::inst0::INSTR'
+  [pumping.frequency]
+    start = 6.5e9
+    stop = 6.8e9
+    points = 101
+  [pumping.power]
+    start = -7.5
+    stop = -12.5
+    points = 10

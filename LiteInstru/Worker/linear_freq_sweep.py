@@ -6,9 +6,9 @@ from datetime import datetime
 from os import makedirs
 from os.path import exists
 import tomlkit
-from driver import get_VNA
+from LiteInstru.driver import get_VNA
 
-config_path = '/home/ratiswu/Documents/GitHub/LiteVNA/Job_request/measurement_LF.toml'
+config_path = '/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/measurement_LF.toml'
 
 # Assuming 'config.toml' is your file
 with open(config_path, 'r') as file:

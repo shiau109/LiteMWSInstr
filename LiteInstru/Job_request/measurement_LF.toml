@@ -5,12 +5,12 @@
   port = "S21"
 
 [sample]
-  name = "QuantWareV14W23A3"
+  name = "Bypass1"
 
 
 [[measurement]]
-  label = "TWPA"
-  output = "/home/ratiswu/liteVNA_test/QuantWareW23A5_pumpoff_new"
+  label = "Bypass1"
+  output = "/home/ratiswu/Kaohy_TWPA/Bypass1"
 
   IF_bandwidth = 1000
   power = -40
@@ -18,4 +18,4 @@
   [measurement.frequency]
     start = 3e9
     stop = 9e9
-    points = 5001
+    points = 6001
