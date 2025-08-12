@@ -43,6 +43,7 @@ if __name__ == "__main__":
     
     file_name = 'Bypass'
     folder = "/home/ratiswu/Kaohy_TWPA/Bypass1"
+    pumping_attr = {"pumping_freq":0e9, "pumping_power":-100}
 
 
     ip = "192.168.1.20"
@@ -61,7 +62,8 @@ if __name__ == "__main__":
     Dr.file_name = file_name
     Dr.file_folder = folder
     Dr.coordinates = {"repeat":arange(data['repeat']),"frequency":array(data["freq"])}
-    Dr.attributes = {"model":"N9020B","IP":"192.168.1.20"}
+    Dr.attributes = {"model":"N9020B","IP":"192.168.1.20"} 
+    Dr.attributes.update(pumping_attr)
     file_loc = Dr.save()
 
     import matplotlib.pyplot as plt

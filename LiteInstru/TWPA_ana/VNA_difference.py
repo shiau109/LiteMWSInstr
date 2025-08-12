@@ -11,15 +11,11 @@ pump_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/TWPA_20250
 
 
 
-
-
-pump_parameter = pump_data.split("/")[-2].split("_")[-1]
-pump_freq = pump_parameter.lower().split("mhz")[0]
-pump_power = pump_parameter.lower().split("mhz")[-1].split("dbm")[0].replace("m","-") if "m" in pump_parameter.lower().split("mhz")[-1].split("dbm")[0] else pump_parameter.lower().split("mhz")[-1].split("dbm")[0]
-pump_power = str(int(pump_power)/10) if len(pump_power.replace("-",""))==3 else pump_power
 ds_pump = xr.open_dataset(pump_data)
 IQ_pump = array(ds_pump.s21.data)[0]+array(ds_pump.s21.data)[1]*1j
 freq = array(ds_pump.s21.frequency)*1e-9
+pump_freq = ds_pump.attrs["pumping_freq"]
+pump_power = ds_pump.attrs["pumping_power"]
 ds_pump.close()
 
 ds_poff = xr.open_dataset(baseline_data)
@@ -35,7 +31,7 @@ df = pd.DataFrame.from_dict(dicts,orient='index').to_csv(os.path.join(os.path.sp
 
 fig, axes = plt.subplots(2,1)
 ax0:Axes = axes[0]
-ax0.plot(freq, 20*log10(abs(IQ_poff)), label='pump off', c='blue')
+ax0.plot(freq, 20*log10(abs(IQ_poff)), label='Bypass', c='blue')
 ax0.plot(freq, 20*log10(abs(IQ_pump)), label=f"pump by {pump_freq} MHz, {pump_power} dBm", c='red')
 ax0.grid()
 ax0.legend()

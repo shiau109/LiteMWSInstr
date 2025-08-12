@@ -43,7 +43,12 @@ for m_task in measurements:
     IF_bandwidth = m_task["frequency"]["points"]
     repeat = m_task["repeat"]
     IF_bandwidth = m_task["IF_bandwidth"]
-    
+
+    if "note" in m_task:
+        additional_attris = m_task["note"]
+    else:
+        additional_attris = {}
+
     for i in range(repeat):
         print(f"measurement: {i}/{repeat}")
         # Set start and stop frequencies
@@ -68,7 +73,9 @@ for m_task in measurements:
 
         dataset.attrs["start_time"] = str(start_time.strftime("%Y%m%d_%H%M%S"))
         dataset.attrs["end_time"] = str(end_time.strftime("%Y%m%d_%H%M%S"))
-
+        
+        dataset.attrs.update(additional_attris)
+        
         if not exists(output_folder):
             makedirs(output_folder)
             print(f"Create subfolder {output_folder} in result!")

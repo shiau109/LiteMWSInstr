@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from qcodes.instrument.visa import VisaInstrument
 from numpy import ndarray, linspace
 import time
-from numpy import array, mean, log10, sqrt
+from numpy import array, mean, log10, sqrt, ndarray
 
 class MXA(VisaInstrument):
 
@@ -107,7 +107,7 @@ class MXA(VisaInstrument):
         print("SA closed. ")
         self.close()
 
-    def mean_traces_in_dBm(self, traces_dBm, mode:str='rms'):
+    def mean_traces_in_dBm(self, traces_dBm, mode:str='rms')->ndarray:
         '''
         Turn the trace from dBm unit to Watt, then average it by the mode. 
         * mode = 'rms':root mean square. 'mean':mean

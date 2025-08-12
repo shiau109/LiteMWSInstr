@@ -1,25 +1,26 @@
 import os
-from numpy import array, abs, log10
+from LiteInstru.driver.MXA import MXA
+from numpy import array
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 import pandas as pd
+from xarray import open_dataset
 from scipy.ndimage import gaussian_filter1d
 
 baseline_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_NEWpumpoff/no5_noise_pumpoff.csv'
 pump_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/no5_noise_pumpon.csv'
 
-df:dict = pd.read_csv(pump_data,skiprows=range(43)).to_dict()["DATA"]
-freq = array(list(df.keys()))*1e-9
-power_on = array(list(df.values()))
+pp_ds = open_dataset(pump_data)
+pump_freq = pp_ds.attrs["pumping_freq"]
+pump_power = pp_ds.attrs["pumping_power"]
+power_on = MXA.mean_traces_in_dBm(array(pp_ds.data['data']))  # dBm -> W -> RMS average -> dBm
+freq = array(pp_ds.coords["frequency"])
+pp_ds.close()
 
-df_off:dict = pd.read_csv(baseline_data,skiprows=range(43)).to_dict()["DATA"]
-power_off = array(list(df_off.values()))
+bp_ds = open_dataset(baseline_data)
+power_off = MXA.mean_traces_in_dBm(array(bp_ds.data['data']))
+bp_ds.close()
 
-
-pump_parameter = pump_data.split("/")[-2].split("_")[-1]
-pump_freq = pump_parameter.lower().split("mhz")[0]
-pump_power = pump_parameter.lower().split("mhz")[-1].split("dbm")[0].replace("m","-") if "m" in pump_parameter.lower().split("mhz")[-1].split("dbm")[0] else pump_parameter.lower().split("mhz")[-1].split("dbm")[0]
-pump_power = str(int(pump_power)/10) if len(pump_power.replace("-",""))==3 else pump_power
 
 noise_diff = power_on - power_off
 dicts = {}

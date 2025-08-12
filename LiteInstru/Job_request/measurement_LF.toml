@@ -1,11 +1,12 @@
+[Job_info]
+  mission = "VNA_linearly_sweep"
+  sample = ""
+
 [hardware]
   model = "ZNB"
   address = 'TCPIP0::192.168.1.215::inst0::INSTR'
   attenuation = 80
   port = "S21"
-
-[sample]
-  name = "Bypass1"
 
 
 [[measurement]]
@@ -19,3 +20,8 @@
     start = 3e9
     stop = 9e9
     points = 6001
+  
+  [measurement.note]
+    pumping_freq = 0e9
+    pumping_power = -100
+
