@@ -7,18 +7,18 @@ import pandas as pd
 from xarray import open_dataset
 from scipy.ndimage import gaussian_filter1d
 
-baseline_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_NEWpumpoff/no5_noise_pumpoff.csv'
-pump_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/no5_noise_pumpon.csv'
+baseline_data = '/home/ratiswu/Kaohy_TWPA/Bypass1/Bypass_noise_250812180941.nc'
+pump_data = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/pumpon_noise_250812190848.nc'
 
 pp_ds = open_dataset(pump_data)
 pump_freq = pp_ds.attrs["pumping_freq"]
 pump_power = pp_ds.attrs["pumping_power"]
-power_on = mean_traces_in_dBm(array(pp_ds.data['data']))  # dBm -> W -> RMS average -> dBm
+power_on = array(pp_ds.data_vars['data'])  # dBm -> W -> RMS average -> dBm
 freq = array(pp_ds.coords["frequency"])
 pp_ds.close()
 
 bp_ds = open_dataset(baseline_data)
-power_off = mean_traces_in_dBm(array(bp_ds.data['data']))
+power_off = array(bp_ds.data_vars['data'])
 bp_ds.close()
 
 

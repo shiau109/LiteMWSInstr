@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import os
 from scipy.ndimage import gaussian_filter1d
 
-gain_file = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/gain.csv'
-noise_file = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/noise_diff.csv'
+gain_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/gain.csv'
+noise_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/noise_diff.csv'
 
 dict_gain = read_csv(gain_file,skiprows=0).to_dict(orient='series')
 dict_noise = read_csv(noise_file,skiprows=0).to_dict(orient='series')
@@ -15,7 +15,7 @@ freq_n = array(dict_noise["Unnamed: 0"])
 noise = array(dict_noise["0"])
 
 plt.plot(freq_g, gain-noise,c='black')
-plt.plot(freq_n, gaussian_filter1d(gain-noise, sigma=100),c='cyan')
+plt.plot(freq_n*1e-9, gaussian_filter1d(gain-noise, sigma=100),c='cyan')
 plt.grid()
 plt.xlabel("Frequency (GHz)")
 plt.ylabel("dSNR")
