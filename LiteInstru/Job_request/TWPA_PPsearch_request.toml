@@ -6,8 +6,8 @@
 
 
 [[measurement]]
-  label = "SilentWave_A1702"
-  output = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702"
+  label = "SilentWave_A1702v2"
+  output = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2"
 
   IF_bandwidth = 1000
   power = -40

@@ -6,8 +6,8 @@ import xarray as xr
 import pandas as pd
 from scipy.ndimage import gaussian_filter1d
 
-baseline_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_NEWpumpoff/TWPA_20250731_173203.nc'
-pump_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/TWPA_20250731_172957.nc'
+baseline_data = '/home/ratiswu/Kaohy_TWPA/Bypass1/Bypass1_20250811_172911.nc'
+pump_data = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2/pumpingOn/SilentWaveA1702_20250812_145652.nc'
 
 
 
@@ -32,7 +32,7 @@ df = pd.DataFrame.from_dict(dicts,orient='index').to_csv(os.path.join(os.path.sp
 fig, axes = plt.subplots(2,1)
 ax0:Axes = axes[0]
 ax0.plot(freq, 20*log10(abs(IQ_poff)), label='Bypass', c='blue')
-ax0.plot(freq, 20*log10(abs(IQ_pump)), label=f"pump by {pump_freq} MHz, {pump_power} dBm", c='red')
+ax0.plot(freq, 20*log10(abs(IQ_pump)), label=f"pump by {round(pump_freq*1e-6,1)} MHz, {pump_power} dBm", c='red')
 ax0.grid()
 ax0.legend()
 ax0.set_xlabel("Frequency (GHz)")

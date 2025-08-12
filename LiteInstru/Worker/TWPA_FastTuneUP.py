@@ -52,9 +52,9 @@ for ro_location in config["Readout"]:
     ROSG.CW_output(ro_freq, ro_power)
     data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
     
-    Dr.data = data["data"]
+    Dr.data = data["data"][0]
     Dr.file_name = f"{config['Readout'][ro_location]['label']}_pump_off_POWER"
-    Dr.coordinates = {"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.coordinates = {"frequency":np.array(data["freq"])}
     Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"RO_power":ro_power,"RO_freq":ro_freq,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path[config["Readout"][ro_location]['label']]["power_pump_off"] = Dr.save()
     Dr.close_dataset()
@@ -67,7 +67,7 @@ for ro_location in config["Readout"]:
             PPSG.CW_output(pp_freq, pp_power)
             data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
             PPSG.CW_shutdown()
-            every_power_data.append(data['data'])
+            every_power_data.append(data['data'][0])
             pumping_conds["power"]['points']
             elapsed += 1
             print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
@@ -75,7 +75,7 @@ for ro_location in config["Readout"]:
     
     Dr.data = every_freq_data
     Dr.file_name = f"{config['Readout'][ro_location]['label']}_pump_on_POWER"
-    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"frequency":np.array(data["freq"])}
     Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"ROSG_model":ROSG_model,"ROSG_IP":ROSG_address,"RO_power":ro_power,"RO_freq":ro_freq,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path[config["Readout"][ro_location]['label']]["power_pump_on"] = Dr.save()
     Dr.close_dataset()
@@ -85,9 +85,9 @@ for ro_location in config["Readout"]:
     ## pump off
     data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
     
-    Dr.data = data["data"]
+    Dr.data = data["data"][0]
     Dr.file_name = f"{config['Readout'][ro_location]['label']}_pump_off_NOISE"
-    Dr.coordinates = {"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.coordinates = {"frequency":np.array(data["freq"])}
     Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"RO_freq":ro_freq,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path[config["Readout"][ro_location]['label']]["noise_pump_off"] = Dr.save()
     Dr.close_dataset()
@@ -100,14 +100,14 @@ for ro_location in config["Readout"]:
             PPSG.CW_output(pp_freq, pp_power)
             data = SA.span_freq_sweep(center_freq=ro_freq,span_freq=config["Readout"][ro_location]['span_freq'],res_bandwidth=config["Readout"][ro_location]['res_band'],repeat=config["Readout"][ro_location]['repeat'])
             PPSG.CW_shutdown()
-            every_power_data.append(data['data'])
+            every_power_data.append(data['data'][0])
             elapsed += 1
             print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
         every_freq_data.append(every_power_data)
     
     Dr.data = every_freq_data
     Dr.file_name = f"{config['Readout'][ro_location]['label']}_pump_on_NOISE"
-    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"repeat":np.arange(data['repeat']),"frequency":np.array(data["freq"])}
+    Dr.coordinates = {"pump_freqs":pump_freqs,"pump_powers":pump_power,"frequency":np.array(data["freq"])}
     Dr.attributes = {"SA_model":SA_model,"SA_IP":SA_address,"PPSG_model":PPSG_model,"PPSG_IP":PPSG_address,"RO_freq":ro_freq,"time":datetime.now().strftime('%y%m%d_%H%M%S')}
     data_path[config["Readout"][ro_location]['label']]["noise_pump_on"] = Dr.save()
     Dr.close_dataset()

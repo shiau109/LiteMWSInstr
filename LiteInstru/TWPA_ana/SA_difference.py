@@ -32,7 +32,7 @@ pd.DataFrame.from_dict(dicts,orient='index').to_csv(os.path.join(os.path.split(p
 fig, axes = plt.subplots(2,1)
 ax0:Axes = axes[0]
 ax0.plot(freq, power_off, label='pump off', c='blue')
-ax0.plot(freq, power_on, label=f"pump by {pump_freq} MHz, {pump_power} dBm", c='red')
+ax0.plot(freq, power_on, label=f"pump by {round(pump_freq*1e-6,1)} MHz, {pump_power} dBm", c='red')
 ax0.grid()
 ax0.legend()
 ax0.set_xlabel("Frequency (GHz)")

@@ -1,0 +1,14 @@
+{
+    "Ro1": {
+        "power_pump_off": "/home/ratiswu/FastTU_TWPAv2/Ro1_pump_off_POWER_250812134541.nc",
+        "power_pump_on": "/home/ratiswu/FastTU_TWPAv2/Ro1_pump_on_POWER_250812134635.nc",
+        "noise_pump_off": "/home/ratiswu/FastTU_TWPAv2/Ro1_pump_off_NOISE_250812134635.nc",
+        "noise_pump_on": "/home/ratiswu/FastTU_TWPAv2/Ro1_pump_on_NOISE_250812134730.nc"
+    },
+    "Ro2": {
+        "power_pump_off": "/home/ratiswu/FastTU_TWPAv2/Ro2_pump_off_POWER_250812134730.nc",
+        "power_pump_on": "/home/ratiswu/FastTU_TWPAv2/Ro2_pump_on_POWER_250812134824.nc",
+        "noise_pump_off": "/home/ratiswu/FastTU_TWPAv2/Ro2_pump_off_NOISE_250812134824.nc",
+        "noise_pump_on": "/home/ratiswu/FastTU_TWPAv2/Ro2_pump_on_NOISE_250812134918.nc"
+    }
+}

@@ -15,14 +15,14 @@
 
 
 [Readout]
-  output = "/home/ratiswu/FastTU_TWPAv2"
+  output = "/home/ratiswu/FastTU_TWPAv3"
   [Readout.a]
     label = "Ro1"
     RO_freq = 6.1e9
     span_freq = 10e6
     res_band = 1e6
     power = -40
-    repeat = 1
+    repeat = 3
     
   [Readout.b]
     label = "Ro2"
@@ -30,7 +30,7 @@
     span_freq = 10e6
     res_band = 1e6
     power = -40
-    repeat = 1
+    repeat = 3
 
 [Pumping]
   [Pumping.frequency]

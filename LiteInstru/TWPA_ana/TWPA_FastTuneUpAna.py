@@ -5,7 +5,7 @@ import matplotlib as mat
 from os import makedirs
 from LiteInstru.driver.MXA import mean_traces_in_dBm
 
-file_description = "/home/ratiswu/FastTU_TWPAv2/data_descriptions.json"
+file_description = "/home/ratiswu/FastTU_TWPAv3/data_descriptions.json"
 
 warning:bool = False
 with open(file_description, 'r', encoding='utf-8') as f:
@@ -29,13 +29,13 @@ for readout in sum_info:
             RO_target_idx = list(ds.coords['frequency']).index(ds.attrs["RO_freq"]) 
             ROin_power = ds.attrs["RO_power"]
             if name.split("_")[-1].lower() == 'off':
-                gain_off = mean_traces_in_dBm(np.array(ds.data_vars['data']))[RO_target_idx] - ROin_power
+                gain_off = np.array(ds.data_vars['data'])[RO_target_idx] - ROin_power
             else:
                 
                 for f_idx, pp_freq in enumerate(np.array(ds.coords["pump_freqs"])):
                     temp = []
                     for p_idx, pp_power in enumerate(np.array(ds.coords["pump_powers"])):
-                        temp.append(mean_traces_in_dBm(np.array(ds.data_vars['data'])[f_idx][p_idx])[RO_target_idx] - ROin_power - gain_off)
+                        temp.append(np.array(ds.data_vars['data'])[f_idx][p_idx][RO_target_idx] - ROin_power - gain_off)
                     gain.append(temp)
 
                 pump_freq, pump_power = np.array(ds.coords["pump_freqs"]), np.array(ds.coords["pump_powers"])
@@ -71,12 +71,12 @@ for readout in sum_info:
         # Noise part
         elif name.split("_")[0].lower() == 'noise':
             if name.split("_")[-1].lower() == 'off':
-                noise_off = np.mean(mean_traces_in_dBm(np.array(ds.data_vars['data'])))
+                noise_off = np.mean(np.array(ds.data_vars['data']))
             else:
                 for f_idx, pp_freq in enumerate(np.array(ds.coords["pump_freqs"])):
                     temp = []
                     for p_idx, pp_power in enumerate(np.array(ds.coords["pump_powers"])):
-                        temp.append(np.mean(mean_traces_in_dBm(np.array(ds.data_vars['data'])[f_idx][p_idx])) - noise_off)
+                        temp.append(np.mean(np.array(ds.data_vars['data'])[f_idx][p_idx]) - noise_off )
                     noise.append(temp)
                 
                 power, freq = np.meshgrid( np.array(ds.coords["pump_powers"]).flatten(),np.array(ds.coords["pump_freqs"]).flatten()) 

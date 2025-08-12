@@ -10,6 +10,7 @@ class MXA(VisaInstrument):
         super().__init__(name, address, **kwargs)
         self.marker = None
         self.__ask_time = 0
+        self.repeat = 1
         self.print_time:bool = True
         self.write_termination = '\n'
         self.read_termination = '\n'
@@ -40,12 +41,14 @@ class MXA(VisaInstrument):
         self.write(f":CALC:MARK1:X {freq_hz}")
         self.marker = freq_hz
 
-    def set_timeout(self):
+    def set_timeout(self, ):
+    
         sweep_time = float(self.ask(":SWE:TIME?"))
         self.__ask_time = sweep_time/10
         if self.print_time:
-            print(f"total sweep time: {round(sweep_time,1)} secs.")
-        self.visa_handle.timeout = int((sweep_time + 10) * 1000)
+            print(f"total sweep time: {round(self.repeat*sweep_time,1)} secs.")
+        self.visa_handle.timeout = int(self.repeat*(sweep_time + 10) * 1000)
+        
 
     def set_reference_level(self, ref_level_dbm):
         self.write(f":DISP:WIND:TRAC:Y:RLEV {ref_level_dbm}")
@@ -86,6 +89,55 @@ class MXA(VisaInstrument):
             time.sleep(poll_interval)
 
         return self.trace_data()
+    
+    def power_averaged_scan(self, avg_counts:int=10):
+        """
+        Configure MXA and run averaged sweep, return (freqs, power_dbm).
+
+        Parameters
+        ----------
+        avg_count : int
+            Number of averages for :AVER:COUN
+        Returns
+        -------
+        trace
+        """
+        
+        try:
+            self.repeat = avg_counts
+            self.set_timeout()
+            # Output units: dBm (so trace_data will be in dBm)
+            self.write(":UNIT:POWer DBM")
+
+            # Averaging: power average
+            self.write(":AVER:TYPE POW")       # use power averaging
+            self.write(":AVER:COUN {}".format(avg_counts))
+            self.write(":AVER:STAT ON")        # enable averaging
+            self.write(":AVER:CLE")            # clear previous averaged data
+            
+            # Use single-shot mode (non-continuous)
+            self.write(":INIT:CONT OFF")
+
+            # Start sweep (in average mode the instrument will perform avg_count sweeps)
+            self.write(":INIT")
+
+            # Wait until operation complete.
+            # *OPC? blocks until the instrument has finished processing queued commands.
+            # For averaged sweeps it's usually reliable. If not supported, use polling of :STAT:OPER:COND?
+            self.write("*WAI")
+
+            # Optional small pause to ensure buffer is ready
+
+            values = self.trace_data()
+
+            # turn averaging off if you want subsequent sweeps to be single
+            self.write(":AVER:STAT OFF")
+            return values
+        except Exception as e:
+            self.close()
+            print("An error was caught as the following: ")
+            import traceback
+            traceback.print_exc() 
 
     def peak_search(self):
         self.write(":CALC:MARK:MAX")

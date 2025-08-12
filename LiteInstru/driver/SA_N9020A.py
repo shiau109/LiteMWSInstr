@@ -9,6 +9,10 @@ class N9020A(MXA):
     def span_freq_sweep(self, center_freq:float|int, span_freq:float|int, res_bandwidth:float|int, sweep_pts:int|str="auto", repeat:int=1)->dict:
         repeat_data = []
         try:
+            # safety & clear states
+            self.write("*CLS")      # clear errors
+            self.write(":ABOR")     # abort any ongoing operation
+            self.write("*WAI")      # wait previous ops
             self.set_center_frequency(center_freq)
             self.set_rbw(res_bandwidth)
             self.set_span(span_freq)
@@ -17,8 +21,11 @@ class N9020A(MXA):
             else:
                 self.auto_set_sweep_points()
 
-            for re in range(repeat):
+            if repeat == 1:
                 trace = self.single_sweep()
+                repeat_data.append(trace)
+            else:
+                trace = self.power_averaged_scan(avg_counts=repeat)
                 repeat_data.append(trace)
 
             freqs = self.get_freq_samples()
@@ -32,26 +39,3 @@ class N9020A(MXA):
         return {"freq":freqs, "data":repeat_data, "repeat":repeat}
     
 
-
-if __name__ == "__main__":
-    from LiteInstru.DataContainer.DataCenter import Datar
-    from numpy import array, arange
-    ip = "192.168.1.21"
-    address = f'TCPIP0::{ip}::inst0::INSTR'
-    
-    SA = N9020A(address)
-    data = SA.span_freq_sweep(center_freq=6e9,span_freq=1e9,res_bandwidth=0.8e4)
-    SA.shut_down()
-    Dr = Datar()
-    Dr.data = data["data"]
-    Dr.file_name = "test"
-    Dr.file_folder = "."
-    Dr.coordinates = {"repeat":arange(data["repeat"]),"frequency":array(data["freq"])}
-    Dr.attributes = {"model":"N9020A","IP":"192.168.1.21"}
-    file_loc = Dr.save()
-
-    import matplotlib.pyplot as plt
-    import matplotlib
-    matplotlib.use('TkAgg')
-    plt.plot(data['freq'], data['data'][0])
-    plt.show()
