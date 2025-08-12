@@ -1,5 +1,5 @@
 import os
-from LiteInstru.driver.MXA import MXA
+from LiteInstru.driver.MXA import mean_traces_in_dBm
 from numpy import array
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
@@ -13,12 +13,12 @@ pump_data = '/home/ratiswu/liteVNA_test/QuantWareW23A5_7200MHz_m24dBm/no5_noise_
 pp_ds = open_dataset(pump_data)
 pump_freq = pp_ds.attrs["pumping_freq"]
 pump_power = pp_ds.attrs["pumping_power"]
-power_on = MXA.mean_traces_in_dBm(array(pp_ds.data['data']))  # dBm -> W -> RMS average -> dBm
+power_on = mean_traces_in_dBm(array(pp_ds.data['data']))  # dBm -> W -> RMS average -> dBm
 freq = array(pp_ds.coords["frequency"])
 pp_ds.close()
 
 bp_ds = open_dataset(baseline_data)
-power_off = MXA.mean_traces_in_dBm(array(bp_ds.data['data']))
+power_off = mean_traces_in_dBm(array(bp_ds.data['data']))
 bp_ds.close()
 
 

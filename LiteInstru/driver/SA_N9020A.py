@@ -18,7 +18,6 @@ class N9020A(MXA):
                 self.auto_set_sweep_points()
 
             for re in range(repeat):
-                print(f"Starting to sweep {re+1}/{repeat}")
                 trace = self.single_sweep()
                 repeat_data.append(trace)
 

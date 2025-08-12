@@ -15,12 +15,10 @@
 
 
 [Readout]
-
+  output = "/home/ratiswu/FastTU_TWPAv2"
   [Readout.a]
     label = "Ro1"
-    output = "/home/ratiswu/liteVNA_test/TWPA_TuneUP_W23A5"
-
-    RO_freq = 6e9
+    RO_freq = 6.1e9
     span_freq = 10e6
     res_band = 1e6
     power = -40
@@ -28,8 +26,6 @@
     
   [Readout.b]
     label = "Ro2"
-    output = "/home/ratiswu/liteVNA_test/TWPA_TuneUP_W23A5"
-
     RO_freq = 6e9
     span_freq = 10e6
     res_band = 1e6
@@ -38,10 +34,10 @@
 
 [Pumping]
   [Pumping.frequency]
-      start = 6e9
-      stop = 6.3e9
+      start = 6.5e9
+      stop = 6.8e9
       points = 90
   [Pumping.power]
-      start = -15
-      stop = -30
-      points = 30
+      start = -7
+      stop = -13
+      points = 12

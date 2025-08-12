@@ -10,6 +10,7 @@ class MXA(VisaInstrument):
         super().__init__(name, address, **kwargs)
         self.marker = None
         self.__ask_time = 0
+        self.print_time:bool = True
         self.write_termination = '\n'
         self.read_termination = '\n'
     
@@ -30,7 +31,8 @@ class MXA(VisaInstrument):
         points = int(float(self.ask(":FREQ:SPAN?")) / float(self.ask(":BAND?"))) + 1
         if points > 100000:
             points = 100000
-        print(f"Automatically set the sweep point = {points}")
+        if self.print_time:
+            print(f"Automatically set the sweep point = {points}")
         self.set_sweep_pts(points)
 
     def set_marker(self, freq_hz):
@@ -41,7 +43,8 @@ class MXA(VisaInstrument):
     def set_timeout(self):
         sweep_time = float(self.ask(":SWE:TIME?"))
         self.__ask_time = sweep_time/10
-        print(f"total sweep time: {round(sweep_time,1)} secs.")
+        if self.print_time:
+            print(f"total sweep time: {round(sweep_time,1)} secs.")
         self.visa_handle.timeout = int((sweep_time + 10) * 1000)
 
     def set_reference_level(self, ref_level_dbm):
@@ -53,7 +56,8 @@ class MXA(VisaInstrument):
         self.write(":INIT")
 
         # Wait for sweep to complete with progress printing
-        print("Sweep started...")
+        if self.print_time:
+            print("Sweep started...")
         start_time = time.time()
         max_wait = self.visa_handle.timeout / 1000  # Convert ms to seconds
         poll_interval = self.__ask_time  # seconds between checks
@@ -67,11 +71,13 @@ class MXA(VisaInstrument):
                 raise
 
             elapsed = time.time() - start_time
-            print(f"{n} % Completed \r", end='',flush=True)
+            if self.print_time:
+                print(f"{n} % Completed \r", end='',flush=True)
             n+=10
 
             if status==0:  # Bit 0 = 1 → operation complete
-                print("Sweep complete.")
+                if self.print_time:
+                    print("Sweep complete.")
                 break
 
             if elapsed > max_wait:
@@ -107,7 +113,13 @@ class MXA(VisaInstrument):
         print("SA closed. ")
         self.close()
 
-    def mean_traces_in_dBm(self, traces_dBm, mode:str='rms')->ndarray:
+        
+    @abstractmethod
+    def span_freq_sweep(self, center_freq:float, span_freq:float, **kwargs):
+        pass
+
+
+def mean_traces_in_dBm( traces_dBm, mode:str='rms')->ndarray:
         '''
         Turn the trace from dBm unit to Watt, then average it by the mode. 
         * mode = 'rms':root mean square. 'mean':mean
@@ -123,10 +135,3 @@ class MXA(VisaInstrument):
             avg_watt = mean(traces_watt, axis=0)
         avg_dBm = 10 * log10(avg_watt * 1e3)
         return avg_dBm
-        
-    @abstractmethod
-    def span_freq_sweep(self, center_freq:float, span_freq:float, **kwargs):
-        pass
-
-
-
