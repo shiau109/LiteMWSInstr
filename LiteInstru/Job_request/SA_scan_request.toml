@@ -1,0 +1,25 @@
+[Job_info]
+  mission = "SA_linearly_sweep"
+  sample = ""
+
+[hardware]
+  model = "N9020B"
+  address = '192.168.1.20'
+
+
+[[measurement]]
+  label = "SilentWaveA1702"
+  output = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2/pumpingOn"
+
+  res_bandwidth = 1e6
+  repeat = 1
+  
+  [measurement.frequency]
+    start = 3e9
+    stop = 9e9
+    points = 6001
+  
+  [measurement.note]
+    pumping_freq = 6678.9e6
+    pumping_power = -10.19
+

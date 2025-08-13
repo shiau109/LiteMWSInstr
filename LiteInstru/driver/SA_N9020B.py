@@ -4,7 +4,9 @@ from LiteInstru.driver.MXA import MXA, mean_traces_in_dBm
 class N9020B(MXA):
     def __init__(self, address:str, name:str="Keysight_SA"):
         super().__init__(name,address=address)
-        
+    
+    def return_model_type(self)->str:
+        return "N9020B"
     
     def span_freq_sweep(self, center_freq:float|int, span_freq:float|int, res_bandwidth:float|int, sweep_pts:int|str="auto", repeat:int=1)->dict:
         repeat_data = []

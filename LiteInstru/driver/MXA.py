@@ -169,6 +169,9 @@ class MXA(VisaInstrument):
     @abstractmethod
     def span_freq_sweep(self, center_freq:float, span_freq:float, **kwargs):
         pass
+    @abstractmethod
+    def return_model_type(self)->str:
+        pass
 
 
 def mean_traces_in_dBm( traces_dBm, mode:str='rms')->ndarray:

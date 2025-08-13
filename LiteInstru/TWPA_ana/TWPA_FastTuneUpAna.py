@@ -3,7 +3,7 @@ import numpy as np
 from xarray import open_dataset
 import matplotlib as mat
 from os import makedirs
-from LiteInstru.driver.MXA import mean_traces_in_dBm
+
 
 file_description = "/home/ratiswu/FastTU_TWPAv3/data_descriptions.json"
 
@@ -24,7 +24,7 @@ for readout in sum_info:
 
     for name in expected_file_name:  
         # Signal part
-        ds = open_dataset(description[name])
+        ds = open_dataset(os.path.join(os.path.split(file_description)[0],description[name]))
         if name.split("_")[0].lower() == 'power':
             RO_target_idx = list(ds.coords['frequency']).index(ds.attrs["RO_freq"]) 
             ROin_power = ds.attrs["RO_power"]
@@ -144,18 +144,18 @@ for readout in sum_info:
     plt.savefig(os.path.join(pic_save_folder,"dSNR_mapping.png"))
     plt.close()
 
-avg_dSNR = np.average(np.array(ROf_dSNR),axis=0)
+min_dSNR = np.min(np.array(ROf_dSNR))
 power, freq = np.meshgrid( pump_power.flatten(),pump_freq.flatten()) 
-# search a max gain
-flat_index = np.argmax(avg_dSNR)
+# search a max dSNR
+flat_index = np.argmax(min_dSNR)
 # Convert to 2D coordinates (row, col)
-row, col = np.unravel_index(flat_index, avg_dSNR.shape)
+row, col = np.unravel_index(flat_index, min_dSNR.shape)
 
 mat.use('TkAgg')
 import matplotlib.pyplot as plt
-plt.pcolormesh(freq.transpose()*1e-6,power.transpose(),avg_dSNR.transpose(),shading='auto')
+plt.pcolormesh(freq.transpose()*1e-6,power.transpose(),min_dSNR.transpose(),shading='auto')
 
-plt.title("Pump parameter mapping for ROfrequency averaged dSNR")
+plt.title("All RO guaranteed dSNR pumping mapping")
 plt.xlabel("Frequency (MHz)")
 plt.ylabel("Power (dBm)")
 plt.colorbar(label='Differences (dB)')
@@ -170,5 +170,5 @@ plt.annotate(
 )
 plt.grid()
 plt.tight_layout()
-plt.savefig(os.path.join(os.path.split(file_description)[0],"AVG_dSNR_mapping.png"))
+plt.savefig(os.path.join(os.path.split(file_description)[0],"guarantee_dSNR_mapping.png"))
 plt.close()
