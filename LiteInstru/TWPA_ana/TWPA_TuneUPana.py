@@ -6,7 +6,7 @@ import xarray as xr
 
 
 
-file_path = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2/SilentWave_A1702v2_20250812_144245.nc"
+file_path = "/home/ratiswu/test/DR4K3_2FQ1FC/DR4K3_QuantWareV14W15B7_20250826_130848.nc"
 
 
 # Analysis

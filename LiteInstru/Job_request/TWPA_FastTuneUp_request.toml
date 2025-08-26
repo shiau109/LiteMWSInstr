@@ -1,6 +1,6 @@
 [Job_info]
   mission = "TWPA_tuneUp"
-  sample = "Test"
+  sample = "EmptyTest"
 
 [Hardware]
   [Hardware.SA]
@@ -8,36 +8,36 @@
     address = '192.168.1.20'
   [Hardware.ROSG]
     model = "SGS100A"
-    address = '192.168.1.16'
+    address = '192.168.1.11'
   [Hardware.PPSG]
     model = "SGS100A"
-    address = '192.168.1.14'
+    address = '192.168.1.12'
 
 
 [Readout]
-  output = "/home/ratiswu/FastTU_TWPAv3"
+  output = "/home/ratiswu/test/BypassALL"
   [Readout.a]
     label = "Ro1"
-    RO_freq = 6.1e9
+    RO_freq = 5.8e9
     span_freq = 10e6
     res_band = 1e6
     power = -40
-    repeat = 3
+    repeat = 2
     
   [Readout.b]
     label = "Ro2"
-    RO_freq = 6e9
+    RO_freq = 5.9e9
     span_freq = 10e6
     res_band = 1e6
     power = -40
-    repeat = 3
+    repeat = 2
 
 [Pumping]
   [Pumping.frequency]
-      start = 6.5e9
-      stop = 6.8e9
-      points = 90
+      start = 6.85e9
+      stop = 7.125e9
+      points = 100
   [Pumping.power]
-      start = -7
-      stop = -13
-      points = 12
+      start = 2
+      stop = -2
+      points = 8

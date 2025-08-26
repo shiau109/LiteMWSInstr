@@ -8,7 +8,7 @@ from xarray import open_dataset
 from scipy.ndimage import gaussian_filter1d
 
 baseline_data = '/home/ratiswu/Kaohy_TWPA/Bypass1/Bypass_noise_250812180941.nc'
-pump_data = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/pumpon_noise_250812190848.nc'
+pump_data = '/home/ratiswu/FastTWPATup_v4_SilentWave/after/SilentWave_noName_opti_noise_250813125018.nc'
 
 pp_ds = open_dataset(pump_data)
 pump_freq = pp_ds.attrs["pumping_freq"]

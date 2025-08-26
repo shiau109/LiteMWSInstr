@@ -5,7 +5,7 @@ import matplotlib as mat
 from os import makedirs
 
 
-file_description = "/home/ratiswu/FastTU_TWPAv3/data_descriptions.json"
+file_description = "/home/ratiswu/test/DR4K3_2FQ1FC/SNR/data_descriptions.json"
 
 warning:bool = False
 with open(file_description, 'r', encoding='utf-8') as f:
@@ -144,7 +144,7 @@ for readout in sum_info:
     plt.savefig(os.path.join(pic_save_folder,"dSNR_mapping.png"))
     plt.close()
 
-min_dSNR = np.min(np.array(ROf_dSNR))
+min_dSNR = np.min(np.array(ROf_dSNR), axis=0)
 power, freq = np.meshgrid( pump_power.flatten(),pump_freq.flatten()) 
 # search a max dSNR
 flat_index = np.argmax(min_dSNR)

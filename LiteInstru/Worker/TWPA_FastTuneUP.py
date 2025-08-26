@@ -9,7 +9,7 @@ from LiteInstru.driver import get_SA, get_SG
 from LiteInstru.DataContainer.DataCenter import Datar
 
 
-def TWPA_fastTup(request_loc:str, **kwargs):
+def TWPA_fastTup(request_loc:str, **kwargs)->str:
 
     with open(request_loc, 'r') as file:
         content = file.read()
@@ -70,7 +70,7 @@ def TWPA_fastTup(request_loc:str, **kwargs):
                 every_power_data.append(data['data'][0])
                 pumping_conds["power"]['points']
                 elapsed += 1
-                print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
+                # print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
             every_freq_data.append(every_power_data)
         
         Dr.data = every_freq_data
@@ -104,7 +104,7 @@ def TWPA_fastTup(request_loc:str, **kwargs):
                 PPSG.CW_shutdown()
                 every_power_data.append(data['data'][0])
                 elapsed += 1
-                print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
+                # print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
             every_freq_data.append(every_power_data)
         
         Dr.data = every_freq_data
@@ -115,13 +115,15 @@ def TWPA_fastTup(request_loc:str, **kwargs):
         data_path[config["Readout"][ro_location]['label']]["noise_pump_on"] = os.path.split(path)[-1]
         Dr.close_dataset()
 
-    with open(os.path.join(raw_data_folder,"data_descriptions.json"), 'w', encoding='utf-8') as f:
+    des_path = os.path.join(raw_data_folder,"data_descriptions.json")
+    with open(des_path, 'w', encoding='utf-8') as f:
         json.dump(data_path, f, ensure_ascii=False, indent=4)
 
     SA.shut_down()
     SA.close()
     ROSG.close_connection()
     PPSG.close_connection()
+    return des_path
 
 if __name__ == "__main__":
 

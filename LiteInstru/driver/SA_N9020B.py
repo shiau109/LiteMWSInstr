@@ -49,9 +49,9 @@ if __name__ == "__main__":
     from numpy import array, arange
     import os
     
-    file_name = 'SilentWaveA1702v2_noise'
-    folder = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2"
-    pumping_attr = {"pumping_freq":6.6789e9, "pumping_power":-10.19}
+    file_name = 'pumpon_noise'
+    folder = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn"
+    pumping_attr = {"pumping_freq":7010.3e6, "pumping_power":-10.23}
     repeat = 100
 
 

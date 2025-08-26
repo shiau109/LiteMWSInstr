@@ -7,7 +7,7 @@ import pandas as pd
 from scipy.ndimage import gaussian_filter1d
 
 baseline_data = '/home/ratiswu/Kaohy_TWPA/Bypass1/Bypass1_20250811_172911.nc'
-pump_data = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2/pumpingOn/SilentWaveA1702_20250812_145652.nc'
+pump_data = '/home/ratiswu/FastTWPATup_v4_SilentWave/after/after_opti_gain_20250813_125246.nc'
 
 
 

@@ -34,7 +34,7 @@ def SA_linear_scan(request_loc:str, **kwargs):
         else:
             additional_attris = {}
 
-        data = SA.span_freq_sweep(center_freq,span_freq,res_bandwidth,repeat,sweep_point)
+        data = SA.span_freq_sweep(center_freq,span_freq,res_bandwidth,repeat=repeat,sweep_pts=sweep_point)
         SA.shut_down()
     
         Dr = Datar()
@@ -52,6 +52,6 @@ def SA_linear_scan(request_loc:str, **kwargs):
 
 if __name__ == "__main__":
 
-    request = "/Users/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/SA_scan_request.toml"
+    request = "/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/SA_scan_request.toml"
 
     SA_linear_scan(request)

@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import os
 from scipy.ndimage import gaussian_filter1d
 
-gain_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/gain.csv'
-noise_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_A1823/pumpingOn/noise_diff.csv'
+gain_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_noName/pumpingOn/gain.csv'
+noise_file = '/home/ratiswu/Kaohy_TWPA/SilentWave_noName/pumpingOn/noise_diff.csv'
 
 dict_gain = read_csv(gain_file,skiprows=0).to_dict(orient='series')
 dict_noise = read_csv(noise_file,skiprows=0).to_dict(orient='series')

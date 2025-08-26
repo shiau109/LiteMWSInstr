@@ -8,11 +8,11 @@
 
 
 [[measurement]]
-  label = "SilentWaveA1702"
-  output = "/home/ratiswu/Kaohy_TWPA/SilentWave_A1702v2/pumpingOn"
+  label = "SilentWave_noName_opti_noise"
+  output = "/home/ratiswu/FastTWPATup_v4_SilentWave/after"
 
   res_bandwidth = 1e6
-  repeat = 1
+  repeat = 100
   
   [measurement.frequency]
     start = 3e9
@@ -20,6 +20,6 @@
     points = 6001
   
   [measurement.note]
-    pumping_freq = 6678.9e6
-    pumping_power = -10.19
+    pumping_freq = 6739e6
+    pumping_power = -10.9
 
