@@ -8,7 +8,7 @@ import tomlkit
 from LiteInstru.driver import get_VNA, get_SG 
 from LiteInstru.DataContainer.DataCenter import Datar
 
-def TWPA_PPmap(request:str, **kwargs):
+def TWPA_PPmap(request:str, **kwargs)->str:
     # Assuming 'config.toml' is your file
     with open(request, 'r') as file:
         content = file.read()
@@ -84,11 +84,16 @@ def TWPA_PPmap(request:str, **kwargs):
         makedirs(output_folder)
         print(f"Create subfolder {output_folder} in result!")
 
-    dataset.to_netcdf( f"{output_folder}\\{label}_{start_time.strftime('%Y%m%d_%H%M%S')}.nc",auto_complex=True)
+    file_loc = os.path.join(output_folder,f"{label}_{start_time.strftime('%Y%m%d_%H%M%S')}.nc")
+    dataset.to_netcdf( file_loc,auto_complex=True)
     dataset.close()
+
+    return file_loc
 
 
 if __name__ == "__main__":
+
+    from LiteInstru.TWPA_ana.TWPA_TuneUPana import TWPA_PPsearch_ana
     request = '/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_PPsearch_request.toml'
 
-    TWPA_PPmap(request)
+    TWPA_PPsearch_ana(TWPA_PPmap(request))

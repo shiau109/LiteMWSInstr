@@ -6,11 +6,11 @@
 
 
 [[measurement]]
-  label = "DR4K3_QuantWareV14W15B7"
-  output = "/home/ratiswu/test/DR4K3_2FQ1FC"
+  label = "DR4K4"
+  output = "/home/ratiswu/test/DR4K4"
 
   IF_bandwidth = 1000
-  power = -30
+  power = -40
   repeat = 1
   [measurement.frequency]
     start = 5.7e9
@@ -21,10 +21,10 @@
   SG_model = "sgs100a"
   address = 'TCPIP0::192.168.1.84::inst0::INSTR'
   [pumping.frequency]
-    start = 6.9e9
-    stop = 7.125e9
+    start = 7e9
+    stop = 7.4e9
     points = 101
   [pumping.power]
-    start = 2
-    stop = -2
-    points = 8
+    start = -15
+    stop = 5
+    points = 20
