@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
 
-def TWPA_PPsearch_ana(file_path:str):
+def TWPA_GainSearch_ana(file_path:str):
     # Analysis
     dataset = xr.open_dataset(file_path)
     data = np.array(dataset.s21.data) # shape (pump_freq, pump_power, repeat, ro_freq)
@@ -43,4 +43,4 @@ if __name__ == "__main__":
 
 
     file_path = "/home/ratiswu/test/DR4K4/DR4K4_20250829_120639.nc"
-    TWPA_PPsearch_ana(file_path)
+    TWPA_GainSearch_ana(file_path)

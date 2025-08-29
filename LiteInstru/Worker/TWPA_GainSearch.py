@@ -8,7 +8,7 @@ import tomlkit
 from LiteInstru.driver import get_VNA, get_SG 
 from LiteInstru.DataContainer.DataCenter import Datar
 
-def TWPA_PPmap(request:str, **kwargs)->str:
+def TWPA_GainMap(request:str, **kwargs)->str:
     # Assuming 'config.toml' is your file
     with open(request, 'r') as file:
         content = file.read()
@@ -93,7 +93,7 @@ def TWPA_PPmap(request:str, **kwargs)->str:
 
 if __name__ == "__main__":
 
-    from LiteInstru.TWPA_ana.TWPA_TuneUPana import TWPA_PPsearch_ana
-    request = '/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_PPsearch_request.toml'
+    from LiteInstru.TWPA_ana.TWPA_GainSearchAna import TWPA_GainSearch_ana
+    request = '/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_GainSearch_request.toml'
 
-    TWPA_PPsearch_ana(TWPA_PPmap(request))
+    TWPA_GainSearch_ana(TWPA_GainMap(request))
