@@ -1,6 +1,6 @@
 [Job_info]
   mission = "TWPA_tuneUp"
-  sample = "EmptyTest"
+  sample = "DR2K3"
 
 [Hardware]
   [Hardware.SA]
@@ -11,11 +11,11 @@
     address = '192.168.1.11'
   [Hardware.PPSG]
     model = "SGS100A"
-    address = '192.168.1.12'
+    address = '192.168.1.15'
 
 
 [Readout]
-  output = "/home/ratiswu/test/BypassALL"
+  output = "/home/ratiswu/test/DR2K3_5q4cQcage/second_cali/SNR"
   [Readout.a]
     label = "Ro1"
     RO_freq = 5.8e9
@@ -26,7 +26,7 @@
     
   [Readout.b]
     label = "Ro2"
-    RO_freq = 5.9e9
+    RO_freq = 6.1e9
     span_freq = 10e6
     res_band = 1e6
     power = -40
@@ -34,10 +34,10 @@
 
 [Pumping]
   [Pumping.frequency]
-      start = 6.85e9
-      stop = 7.125e9
-      points = 100
+      start = 6.6e9
+      stop = 7.2e9
+      points = 60
   [Pumping.power]
       start = 2
-      stop = -2
-      points = 8
+      stop = 7
+      points = 10

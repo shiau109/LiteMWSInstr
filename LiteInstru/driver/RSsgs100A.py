@@ -5,12 +5,18 @@ class sgs100A(SG):
 
     def __init__( self, address:str , name:str="sgs"):
         self.__sgs = RohdeSchwarzSGS100A(name, address=address)
+        try:
+            self.set_clock_ref("ext")
+        except:
+            self.set_clock_ref("int")
+            print("INT REF CLOCK")
+        
 
     def set_clock_ref( self, clock:str='int'):
-        pass
-    
+        self.__sgs.ref_osc_source(clock)
     
     def CW_output( self, frequency_Hz:float=6e9, power_dBm:float=-20):
+        
         self.__sgs.frequency(frequency_Hz)
         self.__sgs.power(power_dBm)
         self.__sgs.on()

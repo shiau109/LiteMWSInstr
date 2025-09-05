@@ -126,9 +126,9 @@ def TWPA_fastTup(request_loc:str, **kwargs)->str:
     return des_path
 
 if __name__ == "__main__":
-
+    from LiteInstru.TWPA_ana.TWPA_FastTuneUpAna import fastTWPAcali_ana
 
     config_path = '/home/ratiswu/Documents/GitHub/LiteVNA/LiteInstru/Job_request/TWPA_FastTuneUp_request.toml'
     
     
-    TWPA_fastTup(config_path)
+    fastTWPAcali_ana(TWPA_fastTup(config_path))

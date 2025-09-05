@@ -6,25 +6,25 @@
 
 
 [[measurement]]
-  label = "DR4K4"
-  output = "/home/ratiswu/test/DR4K4"
+  label = "DR1K3"
+  output = "/home/ratiswu/test/DR2K3_5q4cQcage/second_cali"
 
   IF_bandwidth = 1000
   power = -40
   repeat = 1
   [measurement.frequency]
-    start = 5.7e9
+    start = 5.8e9
     stop = 6.1e9
     points = 5
 
 [[pumping]]
   SG_model = "sgs100a"
-  address = 'TCPIP0::192.168.1.84::inst0::INSTR'
+  address = 'TCPIP0::192.168.1.15::inst0::INSTR'
   [pumping.frequency]
-    start = 7e9
-    stop = 7.4e9
+    start = 6.6e9
+    stop = 7.2e9
     points = 101
   [pumping.power]
-    start = -15
-    stop = 5
-    points = 20
+    start = 2
+    stop = 7
+    points = 10
