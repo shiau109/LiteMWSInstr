@@ -27,7 +27,7 @@ def TWPA_GainMap(request:str, **kwargs)->str:
 
     vna = get_VNA(vna_address,vna_model)
     vna.check_error()
-    SG = get_SG(sweepLF_config["pumping"][0]["address"], sweepLF_config["pumping"][0]["SG_model"])
+    SG = get_SG(sweepLF_config["pumping"][0]["address"], sweepLF_config["pumping"][0]["SG_model"], sweepLF_config["pumping"][0]["clock"].lower().replace(" ",""))
 
     every_freq_data = [] # shape = (pump_freq, pump_power, repeat, ro_freq)
     start_time = datetime.now()

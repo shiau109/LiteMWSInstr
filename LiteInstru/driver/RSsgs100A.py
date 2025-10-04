@@ -3,13 +3,12 @@ from .SG import SG
 
 class sgs100A(SG):
 
-    def __init__( self, address:str , name:str="sgs"):
+    def __init__( self, address:str , name:str="sgs", clock:str="int"):
         self.__sgs = RohdeSchwarzSGS100A(name, address=address)
         try:
-            self.set_clock_ref("ext")
+            self.set_clock_ref(clock)
         except:
-            self.set_clock_ref("int")
-            print("INT REF CLOCK")
+            raise NameError("Clock setting error")
         
 
     def set_clock_ref( self, clock:str='int'):

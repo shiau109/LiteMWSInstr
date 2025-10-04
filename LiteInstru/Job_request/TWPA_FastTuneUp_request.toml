@@ -1,6 +1,6 @@
 [Job_info]
   mission = "TWPA_tuneUp"
-  sample = "DR2K3"
+  sample = "DR3K1"
 
 [Hardware]
   [Hardware.SA]
@@ -9,35 +9,36 @@
   [Hardware.ROSG]
     model = "SGS100A"
     address = '192.168.1.11'
+    clock = 'int'
   [Hardware.PPSG]
     model = "SGS100A"
-    address = '192.168.1.15'
+    address = '192.168.1.12'
+    clock = 'int'
 
 
 [Readout]
-  output = "/home/ratiswu/test/DR2K3_5q4cQcage/second_cali/SNR"
+  output = "/home/ratiswu/test/DR3K1/SNR"
   [Readout.a]
     label = "Ro1"
-    RO_freq = 5.8e9
+    RO_freq = 5.86e9
     span_freq = 10e6
     res_band = 1e6
-    power = -40
-    repeat = 2
-    
+    power = -25
+    repeat = 1
   [Readout.b]
     label = "Ro2"
-    RO_freq = 6.1e9
+    RO_freq = 5.667e9
     span_freq = 10e6
     res_band = 1e6
-    power = -40
-    repeat = 2
+    power = -25
+    repeat = 1
 
 [Pumping]
   [Pumping.frequency]
-      start = 6.6e9
-      stop = 7.2e9
-      points = 60
+      start = 7.2e9
+      stop = 7.22e9
+      points = 100
   [Pumping.power]
-      start = 2
-      stop = 7
-      points = 10
+      start = 11
+      stop = 13
+      points = 20

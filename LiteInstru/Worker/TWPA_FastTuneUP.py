@@ -18,13 +18,13 @@ def TWPA_fastTup(request_loc:str, **kwargs)->str:
     info = config["Job_info"]
 
     SA_address, SA_model = config["Hardware"]["SA"]["address"], config["Hardware"]["SA"]["model"]
-    ROSG_address, ROSG_model = config["Hardware"]["ROSG"]["address"], config["Hardware"]["ROSG"]["model"]
-    PPSG_address, PPSG_model = config["Hardware"]["PPSG"]["address"], config["Hardware"]["PPSG"]["model"]
-
+    ROSG_address, ROSG_model, ROSG_clock = config["Hardware"]["ROSG"]["address"], config["Hardware"]["ROSG"]["model"], config["Hardware"]["ROSG"]["clock"]
+    PPSG_address, PPSG_model, PPSG_clock = config["Hardware"]["PPSG"]["address"], config["Hardware"]["PPSG"]["model"], config["Hardware"]["PPSG"]["clock"]
+    
     SA = get_SA(f"TCPIP0::{SA_address}::inst0::INSTR", SA_model, name = "SA")
     SA.print_time = False
-    PPSG = get_SG(f"TCPIP0::{PPSG_address}::inst0::INSTR", PPSG_model, name = "ppsg")
-    ROSG = get_SG(f"TCPIP0::{ROSG_address}::inst0::INSTR", ROSG_model, name = "rosg")
+    PPSG = get_SG(f"TCPIP0::{PPSG_address}::inst0::INSTR", PPSG_model, name = "ppsg", clock=PPSG_clock.lower().replace(" ", ""))
+    ROSG = get_SG(f"TCPIP0::{ROSG_address}::inst0::INSTR", ROSG_model, name = "rosg", clock=ROSG_clock.lower().replace(" ", ""))
 
     pumping_conds = config["Pumping"]
     pump_freqs = np.linspace(pumping_conds["frequency"]['start'],pumping_conds["frequency"]['stop'],pumping_conds["frequency"]['points'])
@@ -70,7 +70,7 @@ def TWPA_fastTup(request_loc:str, **kwargs)->str:
                 every_power_data.append(data['data'][0])
                 pumping_conds["power"]['points']
                 elapsed += 1
-                # print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
+                print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
             every_freq_data.append(every_power_data)
         
         Dr.data = every_freq_data
@@ -104,7 +104,7 @@ def TWPA_fastTup(request_loc:str, **kwargs)->str:
                 PPSG.CW_shutdown()
                 every_power_data.append(data['data'][0])
                 elapsed += 1
-                # print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
+                print(f"\r elapsed ~ {int(elapsed*100/total_pts)}%", end='', flush=True)
             every_freq_data.append(every_power_data)
         
         Dr.data = every_freq_data

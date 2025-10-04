@@ -170,9 +170,9 @@ def fastTWPAcali_ana(description_path:str):
     plt.grid()
     plt.tight_layout()
     plt.savefig(os.path.join(os.path.split(description_path)[0],"guarantee_dSNR_mapping.png"))
-    plt.close()
+    plt.show()
 
 
 if __name__ == "__main__":
-    file_description = "/home/ratiswu/test/DR4K3_2FQ1FC/SNR/data_descriptions.json"
+    file_description = "/home/ratiswu/test/DR3K2/SNR/data_descriptions.json"
     fastTWPAcali_ana(file_description)
