@@ -9,6 +9,7 @@ import matplotlib
 import tomlkit
 from datetime import datetime
 from typing import Any
+from pathlib import Path
 
 # Resolve local module paths before importing local packages.
 # This ensures imports succeed regardless of the current working directory.
@@ -1575,10 +1576,16 @@ def main():
     dynamic_data_path = ""
     # Set dynamic data path only if we are starting a new measurement/search workflow
     # (prevents overriding the data path during standalone fits or sweeps of existing directories)
+
+    # edited by Ratis, tring to save the data in a fixed path "~/Resonator_Q_RawData", 2026-09-02
+    data_path = os.path.join(Path.home(),"Resonator_Q_RawData")
+    os.makedirs(data_path, exist_ok=True)
+
     generate_new_timestamp = args.run_all or args.blind_search or args.find_windows
     if generate_new_timestamp:
         run_timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        dynamic_data_path = f"data/{sample_name}_{run_timestamp}"
+        # dynamic_data_path = f"data/{sample_name}_{run_timestamp}"
+        dynamic_data_path = os.path.join(data_path, f"{sample_name}_{run_timestamp}") # Ratis edited 2026-09-02
         print(f"Dynamically setting base output data path to: {dynamic_data_path}")
         if "output" not in orchestrator.res_pd_config:
             orchestrator.res_pd_config["output"] = tomlkit.table()
